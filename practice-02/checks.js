@@ -347,13 +347,27 @@ check("35. Работа с другим набором, без зависимо�
   assert.deepEqual(tasks, before);
 });
 
-// Три собственных проверки можно добавить здесь, до итогового вывода,
-// либо выполнить отдельно и описать в отчёте. Общие проверки удалять не нужно.
-// Пример формы записи (не готовая проверка задания):
-// check("Собственный случай: ...", () => {
-//   const result = ...;
-//   assert.deepEqual(result, ...);
-// });
+// Три собственных проверки 
+check("Собственный случай 1: id удалённой задачи можно использовать снова", () => {
+  const removed = expectTasks(removeTask(fixture(), 7));
+  const next = expectTasks(addTask(removed, 7, "Повторное использование id"));
+  assert.deepEqual(next.map((task) => task.id), [1, 4, 10, 7]);
+});
+ 
+check("Собственный случай 2: длина названия считается после trim", () => {
+  const task = expectTask(createTask(20, "   " + "x".repeat(100) + "   "));
+  assert.equal(task.title.length, 100);
+  expectFailure(createTask(20, "   " + "x".repeat(101) + "   "));
+});
+ 
+check("Собственный случай 3: после ошибки набор остаётся рабочим", () => {
+  const tasks = fixture();
+  expectFailure(addTask(tasks, 4, "Дубликат"));
+  const next = expectTasks(addTask(tasks, 20, "Новая задача"));
+  assert.equal(next.length, 5);
+  assert.deepEqual(tasks, fixture());
+});
+
 
 console.log(`\nПроверок пройдено: ${passed}; не пройдено: ${failed}.`);
 if (failed > 0) {
