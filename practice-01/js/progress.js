@@ -1,7 +1,7 @@
 "use strict";
 
-const totalTasks = 14;
-const completedTasks = 4;
+const totalTasks = 5;
+const completedTasks = 6;
 
 if (totalTasks >= 0 &&
     totalTasks <= 1000 &&
